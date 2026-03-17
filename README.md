@@ -37,6 +37,7 @@ sequenceDiagram
     deactivate server
 
     Note over browser: Once the HTTP code is received,<br> it makes the browser<br> reload the page according <br>to the response header received <br>(/exampleapp/notes)
+    
 
 
 ```
