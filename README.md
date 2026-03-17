@@ -37,7 +37,28 @@ sequenceDiagram
     deactivate server
 
     Note over browser: Once the HTTP code is received,<br> it makes the browser<br> reload the page according <br>to the response header received <br>(/exampleapp/notes)
-    
+    Note over browser:As such, all the elements before the note <br>being sent are reloaded (4 elements overall as described)
 
+    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/notes
+    activate server
+    server-->>browser: HTML document
+    deactivate server
+
+    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.css
+    activate server
+    server-->>browser: the css file
+    deactivate server
+
+    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.js
+    activate server
+    server-->>browser: the JavaScript file
+    deactivate server
+
+    Note right of browser: Once more the browser starts executing the JavaScript code that fetches the JSON from the server
+
+    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/data.json
+    activate server
+    server-->>browser: [{ "content": "HTML is easy", "date": "2023-1-1" }, ... ]
+    deactivate server
 
 ```
