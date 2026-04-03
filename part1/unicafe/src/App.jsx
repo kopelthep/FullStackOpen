@@ -19,6 +19,13 @@ const Title = ({text}) => {
 const Statistics = ({good,neutral,bad}) => {
   const allRatings = good + neutral + bad
   let average = 0
+  if (allRatings == 0) {
+    return (
+      <div>
+        No feedback Given
+      </div>
+    )
+  }
   if (allRatings > 0) {
     average = (good-bad)/allRatings
   }
