@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { div } from 'three/tsl'
 
 
 const Button = ({onClick,text}) => {
@@ -14,15 +15,32 @@ const Title = ({text}) => {
 
   )
 }
-const Ratings = ({good,neutral,bad}) => {
+
+const Statistics = ({good,neutral,bad}) => {
+  const allRatings = good + neutral + bad
+  let average = 0
+  if (allRatings > 0) {
+    average = (good-bad)/allRatings
+  }
+  console.log("allratings",allRatings)
+  console.log(average)
+
+  let positive = 0
+  if (allRatings > 0) {
+    positive = ((good)/allRatings) * 100
+  }
+  
   return(
     <div>
-      <p>Good {good}</p>
-      <p>Neutral {neutral}</p>
-      <p>Bad {bad}</p>
+      <div>Good {good}</div>
+      <div>Neutral {neutral}</div>
+      <div>Bad {bad}</div>
+      <div>All {good+neutral+bad}</div>
+      <div>Average: {average}</div>
+      <div>Positive: {positive} %</div>
     </div>
+    
   )
-
 }
 
 const App = () => {
@@ -30,6 +48,7 @@ const App = () => {
   const [good, setGood] = useState(0)
   const [neutral, setNeutral] = useState(0)
   const [bad, setBad] = useState(0)
+  //const [allRatings, setAllRatings] = useState(0)
   const handleGoodRating = () => {
     setGood(good+1)
   }
@@ -39,6 +58,7 @@ const App = () => {
   const handleBadRating = () => {
     setBad(bad+1)
   }
+  
 
   return (
     <div>
@@ -47,7 +67,9 @@ const App = () => {
       <Button onClick={handleNeutralRating} text={"Neutral"}/>
       <Button onClick={handleBadRating} text={"Bad"}/>
       <Title text={"statistics"}/>
-      <Ratings good={good} neutral={neutral} bad = {bad}/>
+      
+      <Statistics good={good} neutral={neutral} bad = {bad}/>
+
     </div>
   )
 }
