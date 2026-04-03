@@ -13,7 +13,7 @@ const Button = ({onClick,text}) => {
 const DisplayVotes = ({voted}) => {
   return (
     <p>
-      Has {voted} votes
+      has {voted} votes
     </p>
   )
 }
@@ -95,7 +95,7 @@ const App = () => {
         <Button onClick={chooseAnecdote} text={"Next anecdote"} />
         <Button onClick={addVote} text={"Vote"}/>
       </p>
-      <Title text={"Annecdote with the most votes"}/>
+      <Title text={"Anecdote with the most votes"}/>
       <DisplayAnnecdote anecdote={anecdotes[maxVoteIndex]}/>
       <DisplayVotes voted={votes[maxVoteIndex]}/>
 
