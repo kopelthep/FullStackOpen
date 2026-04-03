@@ -32,7 +32,7 @@ const Title = ({text}) => {
   )
 }
 
-//Utility function taken from https://stackoverflow.com/questions/11301438/return-index-of-greatest-value-in-an-array
+//Utility function taken fully from https://stackoverflow.com/questions/11301438/return-index-of-greatest-value-in-an-array
 function indexOfMax(arr) {
     if (arr.length === 0) {
         return -1;
