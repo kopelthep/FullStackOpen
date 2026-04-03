@@ -68,23 +68,23 @@ const App = () => {
   const [selected, setSelected] = useState(0)
   const [votes,setVotes] = useState(Array(anecdotes.length).fill(0))
   const chooseAnecdote = () => {
-    console.log("anecdotes length",anecdotes.length)
+    //console.log("anecdotes length",anecdotes.length)
     let toSet = getRandomInt(anecdotes.length)
-    console.log("toset", toSet)
+    //console.log("toset", toSet)
     setSelected(toSet)
-    console.log("test", votes)
+    //console.log("test", votes)
   }
   //chooseAnecdote()
   const addVote = ()=> {
     const copy = [ ...votes ]
-    console.log("copy",copy)
+    //console.log("copy",copy)
     copy[selected] += 1
-    console.log("updated votes",copy)
+    //console.log("updated votes",copy)
     setVotes(copy)
   }
 
   const maxVoteIndex = indexOfMax(votes)
-  console.log("Biggest number of votesindex",maxVoteIndex,"value",votes[maxVoteIndex])
+  //console.log("Biggest number of votesindex",maxVoteIndex,"value",votes[maxVoteIndex])
 
   return (
     <div>
