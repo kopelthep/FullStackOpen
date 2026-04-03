@@ -10,11 +10,48 @@ const Button = ({onClick,text}) => {
     </button>
   )
 }
-const DisplayVotes = () => {
+const DisplayVotes = ({voted}) => {
   return (
-    
+    <p>
+      Has {voted} votes
+    </p>
   )
 }
+const DisplayAnnecdote = ({anecdote}) => {
+  return(
+    <>
+    {anecdote}
+    </>
+  )
+}
+
+const Title = ({text}) => {
+  return(
+    <h1>{text}</h1>
+
+  )
+}
+
+//Utility function taken from https://stackoverflow.com/questions/11301438/return-index-of-greatest-value-in-an-array
+function indexOfMax(arr) {
+    if (arr.length === 0) {
+        return -1;
+    }
+
+    var max = arr[0];
+    var maxIndex = 0;
+
+    for (var i = 1; i < arr.length; i++) {
+        if (arr[i] > max) {
+            maxIndex = i;
+            max = arr[i];
+        }
+    }
+
+    return maxIndex;
+}
+
+
 
 const App = () => {
   const anecdotes = [
@@ -39,25 +76,34 @@ const App = () => {
   }
   //chooseAnecdote()
   const addVote = ()=> {
-    const copy = { ...votes }
+    const copy = [ ...votes ]
     console.log("copy",copy)
     copy[selected] += 1
     console.log("updated votes",copy)
     setVotes(copy)
   }
 
+  const maxVoteIndex = indexOfMax(votes)
+  console.log("Biggest number of votesindex",maxVoteIndex,"value",votes[maxVoteIndex])
+
   return (
     <div>
-      {anecdotes[selected]}
-      Has {votes[selected]} votes
+      <Title text={"Anecdote of the day"}/>
+      <DisplayAnnecdote anecdote={anecdotes[selected]}/>
+      <DisplayVotes voted={votes[selected]}/>
       <p>
         <Button onClick={chooseAnecdote} text={"Next anecdote"} />
         <Button onClick={addVote} text={"Vote"}/>
       </p>
+      <Title text={"Annecdote with the most votes"}/>
+      <DisplayAnnecdote anecdote={anecdotes[maxVoteIndex]}/>
+      <DisplayVotes voted={votes[maxVoteIndex]}/>
+
       
 
     </div>
   )
 }
-
+// Small note, this could for bigger stuff be more efficient to do overall by simply keeping track on vote of each is "at the top" 
+// so that it only has to check against the one in memory but here it seems unnecessary and an overcomplication
 export default App
