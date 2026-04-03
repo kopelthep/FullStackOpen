@@ -15,11 +15,25 @@ const Title = ({text}) => {
 
   )
 }
+const StatisticLine = ({text, value}) => {
+  return(
+    <tr>
+      <td>
+        {text}
+      </td>
+      <td>
+        {value}
+      </td>
 
+    </tr>
+    
+    
+  )
+}
 const Statistics = ({good,neutral,bad}) => {
   const allRatings = good + neutral + bad
   let average = 0
-  if (allRatings == 0) {
+  if (allRatings === 0) {
     return (
       <div>
         No feedback Given
@@ -33,19 +47,27 @@ const Statistics = ({good,neutral,bad}) => {
   console.log(average)
 
   let positive = 0
+  let positiveString = ""
   if (allRatings > 0) {
     positive = ((good)/allRatings) * 100
+    positiveString = positive.toFixed(1) + "%"
   }
   
   return(
-    <div>
-      <div>Good {good}</div>
-      <div>Neutral {neutral}</div>
-      <div>Bad {bad}</div>
-      <div>All {good+neutral+bad}</div>
-      <div>Average: {average}</div>
-      <div>Positive: {positive} %</div>
-    </div>
+    <table>
+      <tbody>
+        
+        <StatisticLine text="Good" value ={good}/>
+        <StatisticLine text="Neutral" value ={neutral}/>
+        <StatisticLine text="Bad" value ={bad}/>
+        <StatisticLine text="All" value ={allRatings}/>
+        <StatisticLine text="Average" value ={average}/>
+        <StatisticLine text="Positive" value ={positiveString}/> 
+        
+      </tbody>
+      
+      
+    </table>
     
   )
 }
