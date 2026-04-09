@@ -1,30 +1,31 @@
-const Course = ({course}) => {
-    //console.log("course is:",course)
+const Course = ({name, parts}) => {
+    console.log("course is:",name,parts)
+    console.log("parts speicifically",parts)
     //header works
     return (
         <>
-        <Header course = {course}/> 
-        <Content course={course}/>
-        <Total parts={course.parts}/>
+        <Header name = {name}/> 
+        <Content parts={parts}/>
+        <Total parts={parts}/>
         </>
     )
 }
 
-const Header = ({course}) => {
+const Header = ({name}) => {
   //console.log(course)
   return (
-    <h1>
-      {course.name}
-    </h1>
+    <h2>
+      {name}
+    </h2>
   )
 }
 
-const Content = ({course}) => {
-  //console.log("course parts",course.parts)
+const Content = ({parts}) => {
+  console.log("course parts",parts)
 
   return (
     <div>
-      {course.parts.map(parts => 
+      {parts.map(parts => 
           <Part key={parts.id} name={parts.name} exercises={parts.exercises} />
         )}
     </div>
