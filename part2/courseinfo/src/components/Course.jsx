@@ -1,6 +1,6 @@
 const Course = ({name, parts}) => {
-    console.log("course is:",name,parts)
-    console.log("parts speicifically",parts)
+    //console.log("course is:",name,parts)
+    //console.log("parts speicifically",parts)
     //header works
     return (
         <>
@@ -21,7 +21,7 @@ const Header = ({name}) => {
 }
 
 const Content = ({parts}) => {
-  console.log("course parts",parts)
+  //console.log("course parts",parts)
 
   return (
     <div>
