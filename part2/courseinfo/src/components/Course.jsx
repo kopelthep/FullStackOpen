@@ -5,6 +5,7 @@ const Course = ({course}) => {
         <>
         <Header course = {course}/> 
         <Content course={course}/>
+        <Total parts={course.parts}/>
         </>
     )
 }
@@ -19,7 +20,8 @@ const Header = ({course}) => {
 }
 
 const Content = ({course}) => {
-  console.log("course parts",course.parts)
+  //console.log("course parts",course.parts)
+
   return (
     <div>
       {course.parts.map(parts => 
@@ -30,7 +32,7 @@ const Content = ({course}) => {
 }
 
 const Part = ({name,exercises}) => {
-    console.log("parts part",name,exercises)
+    //console.log("parts part",name,exercises)
     return(
         <>
         <p>{name} {exercises}</p>
@@ -38,7 +40,22 @@ const Part = ({name,exercises}) => {
     )
 
 }
-
+const Total = ({parts}) => {
+    //console.log("total",parts)
+    let exercises = parts.map(({ exercises }) => exercises)
+    //console.log ("result",exercises)
+    const sum = exercises.reduce((acc, num) => {
+        //console.log("accumulator and current num",acc,num)
+        return acc + num
+    })
+    //console.log("sum",sum)
+    return(
+        <p>
+            <b>Total of {sum} exercises</b>
+        </p>
+        
+    )
+}
 
 
 export default Course
