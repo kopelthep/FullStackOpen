@@ -14,13 +14,16 @@ const App = () => {
   
   const [newName, setNewName] = useState("")
   const [newNumber, setNewNumber] = useState("")
-
+  const [newSearchName, setNewSearchName] = useState("")
+  const namesToShow = persons.filter(persons => persons.name.toLowerCase().includes(newSearchName.toLowerCase()))// We put both to lowercase so we can just search using also the 
+  // Stuff like uppercase names because searching case sensitive can cause problems
+  console.log("names to show:",namesToShow)
 
   const addNumber = (event) =>{
     event.preventDefault()
     console.log("addnumber persons",persons)
-    const foundName = persons.some(element => element.name === newName);
-    const foundNumber = persons.some(element => element.number === newNumber);
+    const foundName = persons.some(element => element.name === newName)
+    const foundNumber = persons.some(element => element.number === newNumber)
     
     if (!(useRegex(newNumber))){
       return (
@@ -67,11 +70,33 @@ const App = () => {
     setNewNumber(event.target.value)
 
   }
+  const handleNameSearchChange = (event) => {
+    console.log("handleNameSearchChange",event.target.value)
+    setNewSearchName(event.target.value)
+  }
 
+  const searchNumber = (event) => {
+    event.preventDefault()
+    console.log("reset button pressed")
+    setNewSearchName("")
+
+  }
 
   return (
     <div>
       <h2>Phonebook</h2>
+      <form onSubmit={searchNumber}>
+        <div>
+          name to search: <input 
+            value={newSearchName}
+            onChange={handleNameSearchChange}
+          />
+        </div>
+        <div>
+          <button type="submit">reset</button>
+        </div>
+      </form>
+      <h2>Add a new entry</h2>
       <form onSubmit={addNumber}>
         <div>
           name: <input 
@@ -88,7 +113,7 @@ const App = () => {
         </div>
       </form>
       <h2>Numbers</h2>
-      <>{persons.map((persons) => (
+      <>{namesToShow.map((persons) => (
           <Numbers key={persons.name} name={persons.name} number={persons.number} />
         ))}
       </>
