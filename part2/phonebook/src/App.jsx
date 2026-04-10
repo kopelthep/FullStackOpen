@@ -8,6 +8,13 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const addNumber = (event) =>{
     event.preventDefault()
+    console.log("addnumber persons",persons)
+    const found = persons.some(el => el.name === newName);
+    if (found) {
+      return(alert(`${newName} is already added to phonebook`)
+      )
+    }// Overall inspired on https://stackoverflow.com/questions/22844560/check-if-object-value-exists-within-a-javascript-array-of-objects-and-if-not-add
+    //PS: If someone is reading this: i'd rather check stack overflow than use AI when it comes to LEARNING (different thing when coding for other reasons)
     console.log('button clicked', event.target)
     const newNameObject= {
       name: newName,
