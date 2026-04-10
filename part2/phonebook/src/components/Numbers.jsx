@@ -1,8 +1,8 @@
-const Numbers = ({name}) => {
-    console.log(name)
+const Numbers = ({name,number}) => {
+    //console.log(name)
     return (
         <li>
-            {name}
+            {name} : {number}
         </li>
     );
 };
