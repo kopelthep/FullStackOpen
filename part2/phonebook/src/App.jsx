@@ -4,6 +4,7 @@ import { Filter } from './components/Filter';
 import { PersonForm } from './components/PersonForm';
 import {Persons} from './components/Persons';
 import personService from "./services/persons.js"
+import { element } from 'three/tsl';
 function useRegex(input) {
     let regex = /^[+]?(?:\(\d+(?:\.\d+)?\)|\d+(?:\.\d+)?)(?:[ -]?(?:\(\d+(?:\.\d+)?\)|\d+(?:\.\d+)?))*(?:[ ]?(?:x|ext)\.?[ ]?\d{1,5})?$/i;
     return regex.test(input);
@@ -42,7 +43,7 @@ const App = () => {
 
   const addNumber = (event) =>{
     event.preventDefault()
-    //console.log("addnumber persons",persons)
+    console.log("addnumber persons",persons)
     const foundName = persons.some(element => element.name === newName)
     const foundNumber = persons.some(element => element.number === newNumber)
     
@@ -55,11 +56,26 @@ const App = () => {
       return(alert(`${newName} and ${newNumber} already are in the phonebook !`))
     }
 
-    if (foundName) {
-      return(alert(`${newName} is already added to phonebook`))
+    else if (foundName) {
+      if (window.confirm("This user already has a number in the phonebook, you want to override it with this number?")) {
+        //console.log("change number")
+        const toModify = persons.find(changedPerson => changedPerson.name == newName)
+        //console.log("perosn to modify",toModify)
+        const changedPerson = { ...toModify, number: newNumber }
+        //console.log("changed person",changedPerson)
+        personService.update(changedPerson.id,changedPerson)
+          .then(returnedPerson => {
+            setPersons(persons.map(person => person.id === changedPerson.id ? returnedPerson : person))
+
+          })
+        return("")
+      } 
+      else {
+        return(alert(`${newName} is already added to phonebook`))
+      }
     }
 
-    if (foundNumber) {
+    else if (foundNumber) {
       return(alert(`${newNumber} is someone else's number !`))
     }
     
