@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import Numbers from "./components/Numbers"
+import { useState, useEffect } from 'react'
+import axios from 'axios'
 import { Filter } from './components/Filter';
 import { PersonForm } from './components/PersonForm';
 import {Persons} from './components/Persons';
@@ -12,18 +12,22 @@ function useRegex(input) {
 
 const App = () => {
 
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas',
-      number: "040-1234567"
-    },
-    { name: 'Ada Lovelace', number: '39-44-5323523'},
-    { name: 'Dan Abramov', number: '12-43-234345'},
-    { name: 'Mary Poppendieck', number: '39-23-6423122'}
-  ]) 
+  const [persons, setPersons] = useState([]) 
   
   const [newName, setNewName] = useState("")
   const [newNumber, setNewNumber] = useState("")
   const [newSearchName, setNewSearchName] = useState("")
+
+  useEffect(() => {
+    console.log('effect')
+    axios.get('http://localhost:3001/persons').then((response) => {
+      console.log('promise fulfilled')
+      setPersons(response.data)
+    })
+  }, [])
+  console.log('render', persons.length, 'notes')
+
+
   const namesToShow = persons.filter(persons => persons.name.toLowerCase().includes(newSearchName.toLowerCase()))// We put both to lowercase so we can just search using also the 
   // Stuff like uppercase names because searching case sensitive can cause problems
   //console.log("names to show:",namesToShow)
@@ -58,7 +62,8 @@ const App = () => {
     //console.log('button clicked', event.target)
     const newNameObject= {
       name: newName,
-      number: newNumber
+      number: newNumber,
+      id: String(persons.length + 1),
     }
     setPersons(persons.concat(newNameObject))
     //console.log("new persons list",persons)

@@ -3,7 +3,7 @@ export const Persons = ({ namesToShow }) => {
   return (
     <>
       {namesToShow.map((person) => (
-        <Numbers key={person.name} name={person.name} number={person.number} />
+        <Numbers key={person.id} name={person.name} number={person.number} />
       ))}
     </>
   )
