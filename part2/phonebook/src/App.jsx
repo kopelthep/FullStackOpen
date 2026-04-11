@@ -3,6 +3,7 @@ import axios from 'axios'
 import { Filter } from './components/Filter';
 import { PersonForm } from './components/PersonForm';
 import {Persons} from './components/Persons';
+import personService from "./services/persons.js"
 function useRegex(input) {
     let regex = /^[+]?(?:\(\d+(?:\.\d+)?\)|\d+(?:\.\d+)?)(?:[ -]?(?:\(\d+(?:\.\d+)?\)|\d+(?:\.\d+)?))*(?:[ ]?(?:x|ext)\.?[ ]?\d{1,5})?$/i;
     return regex.test(input);
@@ -18,14 +19,21 @@ const App = () => {
   const [newNumber, setNewNumber] = useState("")
   const [newSearchName, setNewSearchName] = useState("")
 
-  useEffect(() => {
+  
+  
+  
+  useEffect(()=> {
     console.log('effect')
-    axios.get('http://localhost:3001/persons').then((response) => {
-      console.log('promise fulfilled')
-      setPersons(response.data)
-    })
-  }, [])
+    personService
+      .getAll()
+      .then(response => {
+        setPersons(response)
+      })
+  },[])
   console.log('render', persons.length, 'notes')
+
+  
+
 
 
   const namesToShow = persons.filter(persons => persons.name.toLowerCase().includes(newSearchName.toLowerCase()))// We put both to lowercase so we can just search using also the 
@@ -65,8 +73,36 @@ const App = () => {
       number: newNumber,
       id: String(persons.length + 1),
     }
+    personService
+      .create(newNameObject)
+      .then(response => {
+        setPersons(persons.concat(response))
+        setNewNumber("")
+        setNewName("")
+      })
     setPersons(persons.concat(newNameObject))
     //console.log("new persons list",persons)
+  }
+  const deletePerson = (id) => {
+    console.log('currently deleting id number' + id)
+    if (window.confirm("Do you want to delete this person from the phonebook?")) {
+      personService
+        .deletion(id)
+        .then(() => {
+          setPersons(persons.filter(deletedPerson => deletedPerson.id !== id))
+      })
+      .catch(error =>{
+        alert(
+          `${(persons.find(x => x.id === id)).name} was already deleted from server`
+        )
+        setPersons(persons.filter(deletedPerson => deletedPerson.id !== id))
+        
+    })
+    }
+    else {
+      console.log("Deletion cancelled")
+    }
+    
   }
 
 
@@ -92,7 +128,9 @@ const App = () => {
     setNewSearchName("")
 
   }
+  console.log(namesToShow)
 
+  
   return (//The way i have done "Persons" is PROBABLY not the best practice but it makes "app" overall very clean
     <div>
       <h2>Phonebook</h2>
@@ -102,7 +140,7 @@ const App = () => {
       <PersonForm onSubmit={addNumber} nameValue={newName} nameHandler={handleNameChange} numberValue={newNumber} numberHandler={handleNumberChange} />
       
       <h3>Numbers</h3>
-      <Persons namesToShow={namesToShow}/>
+      <Persons namesToShow={namesToShow} deletePerson={deletePerson}/>
       
     </div>
   )
