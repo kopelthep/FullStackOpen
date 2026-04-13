@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+import Notification  from "./components/Notification.jsx"
 import { Filter } from './components/Filter';
 import { PersonForm } from './components/PersonForm';
 import {Persons} from './components/Persons';
 import personService from "./services/persons.js"
-import { element } from 'three/tsl';
+
 function useRegex(input) {
     let regex = /^[+]?(?:\(\d+(?:\.\d+)?\)|\d+(?:\.\d+)?)(?:[ -]?(?:\(\d+(?:\.\d+)?\)|\d+(?:\.\d+)?))*(?:[ ]?(?:x|ext)\.?[ ]?\d{1,5})?$/i;
     return regex.test(input);
@@ -19,6 +19,10 @@ const App = () => {
   const [newName, setNewName] = useState("")
   const [newNumber, setNewNumber] = useState("")
   const [newSearchName, setNewSearchName] = useState("")
+  const [notificationDetails,setNotificationDetails] = useState({
+    message:null,type:null
+  }
+  )
 
   
   
@@ -34,7 +38,22 @@ const App = () => {
   console.log('render', persons.length, 'notes')
 
   
+  const showNotification = (message,notificationType) => {
 
+    const nullNotification ={
+    message:null,
+    type:null
+    }
+    const newNotification = {
+      message: message,
+      type : notificationType
+    }
+    setNotificationDetails(newNotification)
+    setTimeout(() => {
+      setNotificationDetails(nullNotification)
+    }, 5000)
+
+  }
 
 
   const namesToShow = persons.filter(persons => persons.name.toLowerCase().includes(newSearchName.toLowerCase()))// We put both to lowercase so we can just search using also the 
@@ -46,6 +65,7 @@ const App = () => {
     console.log("addnumber persons",persons)
     const foundName = persons.some(element => element.name === newName)
     const foundNumber = persons.some(element => element.number === newNumber)
+    
     
     if (!(useRegex(newNumber))){
       return (
@@ -97,6 +117,9 @@ const App = () => {
         setNewName("")
       })
     setPersons(persons.concat(newNameObject))
+    //TODO
+    showNotification(`${newName} was added to the phonebook`,"notification")
+    
     //console.log("new persons list",persons)
   }
   const deletePerson = (id) => {
@@ -108,9 +131,10 @@ const App = () => {
           setPersons(persons.filter(deletedPerson => deletedPerson.id !== id))
       })
       .catch(error =>{
-        alert(
-          `${(persons.find(x => x.id === id)).name} was already deleted from server`
-        )
+        showNotification(`${(persons.find(x => x.id === id)).name} was already deleted from server`,"error")
+        // alert(
+        //   `${(persons.find(x => x.id === id)).name} was already deleted from server`
+        // )
         setPersons(persons.filter(deletedPerson => deletedPerson.id !== id))
         
     })
@@ -150,6 +174,7 @@ const App = () => {
   return (//The way i have done "Persons" is PROBABLY not the best practice but it makes "app" overall very clean
     <div>
       <h2>Phonebook</h2>
+      <Notification notificationDetails={notificationDetails}/>
       <Filter value={newSearchName} onReset={resetSearch} onChange={handleNameSearchChange}/>
       
       <h3>Add a new entry</h3>
