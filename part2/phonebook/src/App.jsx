@@ -123,7 +123,7 @@ const App = () => {
     //console.log("new persons list",persons)
   }
   const deletePerson = (id) => {
-    console.log('currently deleting id number' + id)
+    console.log('currently deleting id number',id)
     if (window.confirm("Do you want to delete this person from the phonebook?")) {
       personService
         .deletion(id)
