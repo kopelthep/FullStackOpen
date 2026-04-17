@@ -1,9 +1,12 @@
 import { Country } from "./Country";
 
-export const CountriesDisplay = ({ countriesToShow,selectedCountry }) => {
+export const CountriesDisplay = ({ countriesToShow,selectedCountry,makeSelected }) => {//Countries to show is the common names. 
+  // Selectedcountry is the specific chosen country's info in full
+
+  console.log("thisiscountriestoshow insinde display",countriesToShow)
 
   switch (true) {
-    case (countriesToShow.length == 250):
+    case (countriesToShow.length >= 250):
       return(
         <></>
       )
@@ -13,16 +16,25 @@ export const CountriesDisplay = ({ countriesToShow,selectedCountry }) => {
         <>Too many!</>
       );
     case (countriesToShow.length == 1):
-      console.log("ONE");
+      console.log("ONE",countriesToShow);
+      console.log("selectedcountry in one",selectedCountry)
       return (
         <Country countryinfo={selectedCountry}/>
       );
-    default:
+    default:// entre 10 et 2
+      if(selectedCountry !== null){
+        
+        return(<Country countryinfo={selectedCountry}/>
+
+        )
+      }
       console.log("default");
+      //check if clicked ?
       return (
         
         (countriesToShow.map((countries, index) => <li key={index}>
-          {countries}
+          {countries} <button onClick={()=>makeSelected(countries)}>Make selected</button>
+          <Country countryinfo={selectedCountry}/>
         </li>
         ))
       );
