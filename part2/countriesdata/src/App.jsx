@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react'
 import { Filter } from './components/Filter';
 import countryService from "./services/countries.js"
 import { CountriesDisplay } from './components/CountriesDisplay.jsx';
-import { Country } from "./components/Country";
 
 
 const App = () => {
@@ -11,6 +10,7 @@ const App = () => {
   //const notificationDetails =["placeholder","error"]
   const [searchField, setSearchField] = useState("")
   const [selectedCountry, setSelectedCountry] = useState(null)
+  const [selectedCountryWeather, setSelectedCountryWeather] = useState(null)
   const countriesName = (countries.map(countries => countries.name.common ))
 
 
@@ -43,7 +43,6 @@ const App = () => {
     // singleCountry = name
     // console.log("ihnside",singleCountry)
     console.log("thing selectedcountry set to",countries[(countriesName.indexOf(name))])
-    singleCountry = name
     setSelectedCountry(countries[(countriesName.indexOf(name))])
     
   
@@ -67,6 +66,7 @@ const App = () => {
   useEffect(() => {
     if(!singleCountry){// If there is no one sleected country we return undefined
       setSelectedCountry(null)
+      setSelectedCountryWeather(null)
       return(undefined)
     }
     console.log("singlecountry info",singleCountry)
@@ -81,12 +81,42 @@ const App = () => {
     //   })
   }, [singleCountry])
 
+  useEffect(() => {
+    const capital = selectedCountry?.capital?.[0]
+
+    if (!capital) {
+      setSelectedCountryWeather(null)
+      return
+    }
+
+    let cancelled = false
+
+    countryService
+      .getCityWeather(capital)
+      .then(response => {
+        if (!cancelled) {
+          console.log('WEATHER in effect response full', response)
+          setSelectedCountryWeather(response)
+        }
+      })
+      .catch(error => {
+        if (!cancelled) {
+          console.error('WEATHER request failed', error)
+          setSelectedCountryWeather(null)
+        }
+      })
+
+    return () => {
+      cancelled = true
+    }
+  }, [selectedCountry])
+
   
   
  
   console.log('render', countriesName.length, 'countries')
   
-  countriesToShow
+  
 
   const handleSearchChange = (event) => {
     //console.log("handleSearchChange",event.target.value)
@@ -106,7 +136,7 @@ const App = () => {
     <div>
       <h2>Country lookup</h2>
       <Filter value={searchField} onReset={resetSearch} onChange={handleSearchChange}/>
-      <CountriesDisplay countriesToShow={countriesToShow} selectedCountry={selectedCountry} makeSelected={makeSelected}/>
+      <CountriesDisplay countriesToShow={countriesToShow} selectedCountry={selectedCountry} makeSelected={makeSelected} selectedCountryWeather={selectedCountryWeather}/>
       
     </div>
   )
