@@ -91,6 +91,11 @@ app.post('/api/persons', (request, response) => {
       error: 'number missing' 
     })
   }
+  if (persons.find(person => person.number === body.number)) {
+    return response.status(400).json({ 
+      error: 'number already exists' 
+    })
+  }
 
   const person = {
     name: body.name,
