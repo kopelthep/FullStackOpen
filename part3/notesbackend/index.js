@@ -1,7 +1,17 @@
 const express = require('express')
+var morgan = require('morgan')
+
 const app = express()
 app.use(express.json())
-app.use(requestLogger)
+
+//test
+
+
+morgan.token('body', function (req, res) { return JSON.stringify(req.body) })
+
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
+app.use(express.static('dist'))
+
 let notes = [
   {
     id: "1",
@@ -17,6 +27,11 @@ let notes = [
     id: "3",
     content: "GET and POST are the most important methods of HTTP protocol",
     important: true
+  },
+  {
+    id: "",
+    content: "Added note for testing",
+    important: true
   }
 ]
 
@@ -27,7 +42,7 @@ const requestLogger = (request, response, next) => {
   console.log('---')
   next()
 }
-
+app.use(requestLogger)
 
 
 app.get('/', (request, response) => {
@@ -85,7 +100,7 @@ app.delete('/api/notes/:id', (request, response) => {
 })
 
 
-const PORT = 3001
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
 })
