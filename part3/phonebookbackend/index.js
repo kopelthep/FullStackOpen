@@ -43,8 +43,7 @@ let persons = [
     }
 ]
 
-const currentStatus = () => {
-    const length = persons.length
+const currentStatus = (length) => {
     const datenow = Date.now()
     const realtimestamp = Date(datenow).toString()
     console.log(realtimestamp)
@@ -62,7 +61,11 @@ app.get('/', (request, response) => {
 }) 
 
 app.get("/info",(request,response)=>{
-    response.send(currentStatus())
+  Person.find({}).then((persons)=> {
+    console.log("persons length", persons.length)
+    response.send(currentStatus(length=persons.length))
+  })
+    
 })
 
 app.get('/api/persons', (request, response) => {
@@ -71,22 +74,20 @@ app.get('/api/persons', (request, response) => {
   })
 })
 
-app.get("/api/persons/:id",(request,response)=> {
-    const id = request.params.id
-    const person = persons.find(person => person.id === id)
-    if (person) {
+
+
+app.get('/api/persons/:id', (request, response, next) => {
+  Person.findById(request.params.id)
+    .then((person) => {
+      if (person) {
         response.json(person)
-    } 
-    else {
+      } else {
         response.status(404).end()
-    }
+      }
+    })
+    .catch((error) => next(error))
 })
-const generateId = () => {
-  const maxId = persons.length > 0
-    ? Math.floor(Math.random()*100000)+1
-    : 0
-  return String(maxId + 1)
-}
+
 
 
 app.delete('/api/persons/:id', (request, response, next) => {
@@ -121,7 +122,6 @@ app.post('/api/persons', (request, response) => {
   const person = new Person({
     name: body.name,
     number: body.number,
-    id: generateId(),
   })
 
   persons = persons.concat(person)
@@ -138,7 +138,21 @@ const unknownEndpoint = (request, response) => {
   response.status(404).send({ error: 'unknown endpoint' })
 }
 
+
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message)
+
+  if (error.name === 'CastError') {
+    return response.status(400).send({ error: 'malformatted id' })
+  }
+
+  next(error)
+}
+
+
 app.use(unknownEndpoint)
+
+app.use(errorHandler)
 
 const PORT = process.env.PORT
 app.listen(PORT, () => {
