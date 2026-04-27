@@ -115,10 +115,18 @@ const App = () => {
         setPersons(persons.concat(response))
         setNewNumber("")
         setNewName("")
+        showNotification(`${newName} was added to the phonebook`,"notification")
       })
-    setPersons(persons.concat(newNameObject))
+      .catch(error =>{
+        //console.log("error",error)
+        console.log("error message:",error.response.data.error.message)// VERY long path that b asically is: we take the response data when error, specifically it's MESSAGE
+        // and we then display THAT
+
+        showNotification(error.response.data.error.message,"error")
+      })
+    
     //TODO
-    showNotification(`${newName} was added to the phonebook`,"notification")
+    
     
     //console.log("new persons list",persons)
   }
