@@ -24,7 +24,7 @@ app.use(express.json())
 const currentStatus = (length) => {
     const datenow = Date.now()
     const realtimestamp = Date(datenow).toString()
-    console.log(realtimestamp)
+    //console.log(realtimestamp)
     const responseString = String ("<p> Phonebook has info on " + String(length) + " people </p>") + ("<p>"+ realtimestamp +"</p>")
     return(
         responseString
@@ -67,7 +67,7 @@ app.get('/api/persons/:id', (request, response, next) => {
     })
     .catch((error) => next(error))
 })
- 
+
 
 
 app.delete('/api/persons/:id', (request, response, next) => {
@@ -114,7 +114,7 @@ app.post('/api/persons', (request, response) => {
 })
 
 app.put('/api/persons/:id', (request, response, next) => {
-  console.log("request body",request.body)
+  //console.log("request body",request.body)
   const { name, number } = request.body
 
   Person.findById(request.params.id)
