@@ -82,7 +82,7 @@ const App = () => {
         const toModify = persons.find(changedPerson => changedPerson.name == newName)
         //console.log("perosn to modify",toModify)
         const changedPerson = { ...toModify, number: newNumber }
-        //console.log("changed person",changedPerson)
+        console.log("changed person",changedPerson)
         personService.update(changedPerson.id,changedPerson)
           .then(returnedPerson => {
             setPersons(persons.map(person => person.id === changedPerson.id ? returnedPerson : person))
