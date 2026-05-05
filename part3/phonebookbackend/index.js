@@ -5,7 +5,7 @@ const app = express()
 const Person = require('./models/person')
 
 
-morgan.token('body', function (req, res) { return JSON.stringify(req.body) })
+morgan.token('body', function (req) { return JSON.stringify(req.body) })
 
 
 const requestLogger = (request, response, next) => {
@@ -22,36 +22,36 @@ app.use(express.json())
 
 
 const currentStatus = (length) => {
-    const datenow = Date.now()
-    const realtimestamp = Date(datenow).toString()
-    //console.log(realtimestamp)
-    const responseString = String ("<p> Phonebook has info on " + String(length) + " people </p>") + ("<p>"+ realtimestamp +"</p>")
-    return(
-        responseString
-    )
+  const datenow = Date.now()
+  const realtimestamp = Date(datenow).toString()
+  //console.log(realtimestamp)
+  const responseString = String ('<p> Phonebook has info on ' + String(length) + ' people </p>') + ('<p>'+ realtimestamp +'</p>')
+  return(
+    responseString
+  )
 
 }
 
 
 
 app.get('/', (request, response) => {
-    response.send('<h1>Hello World!</h1>')
-}) 
+  response.send('<h1>Hello World!</h1>')
+})
 
-app.get("/info",(request,response,next)=>{
-  Person.find({}).then((persons)=> {
-    console.log("persons length", persons.length)
-    response.send(currentStatus(length=persons.length))
+app.get('/info',(request,response,next) => {
+  Person.find({}).then((persons) => {
+    console.log('persons length', persons.length)
+    response.send(currentStatus(persons.length))
   })
-  .catch((error)=>next(error))
-    
+    .catch((error) => next(error))
+
 })
 
 app.get('/api/persons', (request, response, next) => {
   Person.find({}).then((persons) => {
     response.json(persons)
   })
-  .catch((error)=>next(error))
+    .catch((error) => next(error))
 })
 
 
@@ -72,7 +72,7 @@ app.get('/api/persons/:id', (request, response, next) => {
 
 app.delete('/api/persons/:id', (request, response, next) => {
   Person.findByIdAndDelete(request.params.id)
-    .then((result) => {
+    .then(() => {
       response.status(204).end()
     })
     .catch((error) => next(error))
@@ -82,26 +82,26 @@ app.delete('/api/persons/:id', (request, response, next) => {
 
 app.post('/api/persons', (request, response,next) => {
   const body = request.body
-  console.log("REQUEST MADE")
+  console.log('REQUEST MADE')
 
-  
-  
+
+
   if (!body.name) {
-    return response.status(400).json({ 
-      error: 'name missing' 
+    return response.status(400).json({
+      error: 'name missing'
     })
   }
   if (!body.number) {
-    return response.status(400).json({ 
-      error: 'number missing' 
+    return response.status(400).json({
+      error: 'number missing'
     })
   }
-  
-  Person.findOne({number:body.number})
+
+  Person.findOne({ number:body.number })
     .then((existingPerson) => {
       if (existingPerson) {
         return response.status(400).json({
-          error:"Number already in use"
+          error:'Number already in use'
         })
       }
       const person = new Person({
@@ -112,8 +112,8 @@ app.post('/api/persons', (request, response,next) => {
         response.json(savedPerson)
       })
     })
-    .catch((error)=>next(error))
-  
+    .catch((error) => next(error))
+
 })
 
 app.put('/api/persons/:id', (request, response, next) => {
@@ -145,7 +145,7 @@ const unknownEndpoint = (request, response) => {
 
 const errorHandler = (error, request, response, next) => {
   console.error(error.message)
-  console.error("Error name:",error.name)
+  console.error('Error name:',error.name)
 
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'malformatted id' })
@@ -163,5 +163,5 @@ app.use(errorHandler)
 
 const PORT = process.env.PORT
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`)
+  console.log(`Server running on port ${PORT}`)
 })
